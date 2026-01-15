@@ -19,7 +19,7 @@ static void print_usage(const char *program_name) {
     printf("Options:\n");
     printf("  -p, --port PORT\n");
     printf("  -t, --max-client-threads N\n");
-    printf("  -s, --cache-max-size\n");
+    printf("  -s, --cache-max-size SIZE\n");
     printf("  -l, --cache-ttl SECONDS\n");
     printf("  -h, --help\n");
     printf("\nExample:\n");
