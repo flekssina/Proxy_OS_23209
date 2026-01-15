@@ -23,7 +23,7 @@ static void print_usage(const char *program_name) {
     printf("  -l, --cache-ttl SECONDS\n");
     printf("  -h, --help\n");
     printf("\nExample:\n");
-    printf("  %s --port 9000 --max-threads 100 --cache-size 104857600\n", program_name);
+    printf("./http_proxy --port 9000 --max-client-threads 100 --cache-max-size 104857600\n");
 }
 
 int main(int argc, char *argv[]) {
