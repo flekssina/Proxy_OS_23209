@@ -2,6 +2,7 @@
 #define PROXY_H
 
 #include "thread_pool.h"
+#include "cache.h"
 #include <stdbool.h>
 
 typedef struct {
@@ -10,6 +11,10 @@ typedef struct {
     int server_fd;
     thread_pool_t *pool;
     volatile bool running;
+
+    cache_t *cache;
+    size_t cache_max_size;
+    int cache_ttl;
 } proxy_config_t;
 
 int proxy_init(proxy_config_t *config);

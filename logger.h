@@ -1,8 +1,7 @@
 #ifndef LOGGER_H
 #define LOGGER_H
-#include <stdio.h>
 #include <pthread.h>
-#include <time.h>
+
 
 typedef enum {
     LOG_DEBUG,

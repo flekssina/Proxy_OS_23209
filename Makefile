@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pthread -O2 -g
+CFLAGS = -Wall -Wextra -Werror -pthread -O2 -g -D_POSIX_C_SOURCE=200809L
 LDFLAGS = -pthread
 
 SRCS = main.c \
@@ -7,13 +7,15 @@ SRCS = main.c \
        thread_pool.c \
        http_handler.c \
        logger.c \
-       picohttpparser.c
+       picohttpparser.c \
+       cache.c
 
 HEADERS = proxy.h \
           thread_pool.h \
           http_handler.h \
           logger.h \
-          picohttpparser.h
+          picohttpparser.h \
+          cache.h
 
 OBJS = $(SRCS:.c=.o)
 TARGET = http_proxy
