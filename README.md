@@ -13,8 +13,12 @@ Options:
 
 --help
 
+--cache-max-size SIZE
+
+--cache-ttl SECONDS
+
 Example:
 
 ```bash
-./http_proxy --port 9000 --max-client-threads 100
+./http_proxy --port 9000 --max-threads 100 --cache-max-size 104857600
 ```
