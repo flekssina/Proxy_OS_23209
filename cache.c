@@ -171,8 +171,18 @@ cache_t* cache_init(cache_config_t *config) {
     cache->gc_running = true;
 
 
-    pthread_mutex_init(&cache->cache_mutex, NULL);
-    pthread_cond_init(&cache->gc_cond, NULL);
+    if (pthread_mutex_init(&cache->cache_mutex, NULL) != 0) {
+        logger_log(LOG_ERROR, "Failed to init cache mutex");
+        free(cache);
+        return NULL;
+    }
+
+    if (pthread_cond_init(&cache->gc_cond, NULL) != 0) {
+        logger_log(LOG_ERROR, "Failed to init gc cond");
+        pthread_mutex_destroy(&cache->cache_mutex);
+        free(cache);
+        return NULL;
+    }
 
     if (pthread_create(&cache->gc_thread, NULL, gc_thread, cache) != 0) {
         logger_log(LOG_ERROR, "Failed to create gc thread");
@@ -196,7 +206,9 @@ void cache_destroy(cache_t *cache) {
     pthread_cond_signal(&cache->gc_cond);
     pthread_mutex_unlock(&cache->cache_mutex);
 
-    pthread_join(cache->gc_thread, NULL);
+    if (pthread_join(cache->gc_thread, NULL) != 0) {
+    logger_log(LOG_ERROR, "Failed to join gc thread");
+    }
 
     pthread_mutex_lock(&cache->cache_mutex);
 
@@ -305,8 +317,22 @@ cache_entry_t* cache_get(cache_t *cache, const char *url) {
     entry->created = time(NULL);
     entry->last_access = entry->created;
 
-    pthread_mutex_init(&entry->entry_mutex, NULL);
-    pthread_cond_init(&entry->data_available, NULL);
+    if (pthread_mutex_init(&entry->entry_mutex, NULL) != 0) {
+        logger_log(LOG_ERROR, "Failed to init entry mutex");
+        free(entry->url);
+        free(entry);
+        pthread_mutex_unlock(&cache->cache_mutex);
+        return NULL;
+    }
+
+    if (pthread_cond_init(&entry->data_available, NULL) != 0) {
+        logger_log(LOG_ERROR, "Failed to init entry cond");
+        pthread_mutex_destroy(&entry->entry_mutex);
+        free(entry->url);
+        free(entry);
+        pthread_mutex_unlock(&cache->cache_mutex);
+        return NULL;
+    }
 
     entry->lru_next = cache->lru_head;
     if (cache->lru_head) {

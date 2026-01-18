@@ -133,7 +133,9 @@ void thread_pool_destroy(thread_pool_t *pool) {
     pthread_mutex_unlock(&pool->queue_mutex);
 
     for (int i = 0; i < pool->thread_count; i++) {
-        pthread_join(pool->threads[i], NULL);
+       if(pthread_join(pool->threads[i], NULL) != 0) {
+        logger_log(LOG_ERROR, "Failed to join thread");
+       }
     }
 
     logger_log(LOG_INFO, "All worker threads have finished");

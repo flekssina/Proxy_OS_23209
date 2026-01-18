@@ -7,7 +7,7 @@ Usage:
 ```
 Options:
 
---port Port 
+--port Port
 
 --max-client-threads N
 
